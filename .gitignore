@@ -1,0 +1,6 @@
+# private files
+secrets.txt
+phone_numbers.txt
+
+# python residuals
+__pycache__
