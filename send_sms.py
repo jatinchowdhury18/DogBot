@@ -1,4 +1,6 @@
+import os
 from twilio.rest import Client
+from twilio.http.http_client import TwilioHttpClient
 from get_images import get_image_urls
 from get_secrets import *
 import random
@@ -16,7 +18,9 @@ def get_phone_numbers():
     return phone_numbers
 
 def main():
-    client = Client (get_account_sid(), get_auth_token())
+    proxy_client = TwilioHttpClient()
+    proxy_client.session.proxies = {'https': os.environ['https_proxy']}
+    client = Client (get_account_sid(), get_auth_token(), http_client=proxy_client)
 
     query = get_query()
     url = random.choice (get_image_urls (query))
