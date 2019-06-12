@@ -19,8 +19,12 @@ def get_phone_numbers():
     return phone_numbers
 
 def main():
+    # get time (Pacific)
+    time = (datetime.utcnow().time().hour - 7) % 24
+    print ("[Trigger]: Hour {}".format (time))
+
     # only run if not in the middle of the night
-    if datetime.now().time().hour in [0, 1, 2, 3, 4, 5, 6, 7]:
+    if time in [0, 1, 2, 3, 4, 5, 6, 7]:
         print ("[Skipping]: Late at night")
         return
 
@@ -33,19 +37,18 @@ def main():
     twilio_number = get_Twilio_number()
     phone_numbers = get_phone_numbers()
 
-    # Send messages
     num_sent = 0
     for number in phone_numbers:
-        try:
-            # Google search
-            query = get_query()
-            url = random.choice (get_image_urls (query))
-            print ("[Query]: {}".format (query))
+        # Google search
+        query = get_query()
+        url = random.choice (get_image_urls (query))
+        print ("[Query]: {}".format (query))
 
+        # send message
+        try:
             message = client.messages.create (from_=twilio_number, media_url=url, to=number)
             num_sent += 1
             print ("[Sending]: {}".format (message.sid))
-            break
         except:
             pass
 
