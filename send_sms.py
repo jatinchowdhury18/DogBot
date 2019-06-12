@@ -4,6 +4,7 @@ from twilio.http.http_client import TwilioHttpClient
 from get_images import get_image_urls
 from get_secrets import *
 import random
+from datetime import datetime
 
 def get_query():
     file = open ("queries.txt", 'r')
@@ -18,19 +19,37 @@ def get_phone_numbers():
     return phone_numbers
 
 def main():
+    # only run if not in the middle of the night
+    if datetime.now().time().hour in [0, 1, 2, 3, 4, 5, 6, 7]:
+        print ("[Skipping]: Late at night")
+        return
+
+    # set up Twilio client
     proxy_client = TwilioHttpClient()
     proxy_client.session.proxies = {'https': os.environ['https_proxy']}
-    client = Client (get_account_sid(), get_auth_token(), http_client=proxy_client)
+    client = Client (get_account_sid(), get_auth_token()), http_client=proxy_client)
 
-    query = get_query()
-    url = random.choice (get_image_urls (query))
-
+    # set up phone numbers
     twilio_number = get_Twilio_number()
     phone_numbers = get_phone_numbers()
 
+    # Send messages
+    num_sent = 0
     for number in phone_numbers:
-        message = client.messages.create (from_=twilio_number, media_url=url, to=number)
-        print (message.sid)
+        try:
+            # Google search
+            query = get_query()
+            url = random.choice (get_image_urls (query))
+            print ("[Query]: {}".format (query))
+
+            message = client.messages.create (from_=twilio_number, media_url=url, to=number)
+            num_sent += 1
+            print ("[Sending]: {}".format (message.sid))
+            break
+        except:
+            pass
+
+    print ("[Messages succesful]: {}".format (num_sent))
 
 if __name__ == "__main__":
     main()
