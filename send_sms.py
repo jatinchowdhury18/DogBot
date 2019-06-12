@@ -27,7 +27,7 @@ def main():
     # set up Twilio client
     proxy_client = TwilioHttpClient()
     proxy_client.session.proxies = {'https': os.environ['https_proxy']}
-    client = Client (get_account_sid(), get_auth_token()), http_client=proxy_client)
+    client = Client (get_account_sid(), get_auth_token(), http_client=proxy_client)
 
     # set up phone numbers
     twilio_number = get_Twilio_number()
