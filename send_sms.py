@@ -24,7 +24,7 @@ def main():
     print ("[Trigger]: Hour {}".format (time))
 
     # only run if not in the middle of the night
-    if time in [0, 1, 2, 3, 4, 5, 6, 7]:
+    if time in [22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8]:
         print ("[Skipping]: Late at night")
         return
 

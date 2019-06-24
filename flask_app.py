@@ -17,7 +17,7 @@ job_defaults = {
     'max_instances': 5
 }
 cron = BlockingScheduler (job_defaults=job_defaults, daemon=True)
-cron.add_job (server, 'interval', minutes=73)
+cron.add_job (server, 'interval', minutes=154)
 cron.start()
 
 atexit.register (lambda: cron.shutdown (wait=False))
